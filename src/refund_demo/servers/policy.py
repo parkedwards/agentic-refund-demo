@@ -30,6 +30,33 @@ _CLAUSES = {
         ),
         effect="allow",
     ),
+    "REPLACEMENT-DAMAGE-1": PolicyClause(
+        clause_id="REPLACEMENT-DAMAGE-1",
+        title="Damaged-item replacement",
+        rule=(
+            "A verified damaged physical item can receive an automatic replacement "
+            "when inventory is available, risk is low, and the customer requests it."
+        ),
+        effect="allow",
+    ),
+    "STORE-CREDIT-30": PolicyClause(
+        clause_id="STORE-CREDIT-30",
+        title="Store credit within return window",
+        rule=(
+            "A non-final-sale physical item can receive store credit within 30 days "
+            "when the customer requests credit and risk is low."
+        ),
+        effect="allow",
+    ),
+    "CARRIER-REVIEW-1": PolicyClause(
+        clause_id="CARRIER-REVIEW-1",
+        title="Stalled shipment review",
+        rule=(
+            "Open a carrier review before a refund decision when tracking has stalled "
+            "and authoritative delivery evidence is not yet available."
+        ),
+        effect="allow",
+    ),
     "DELIVERY-EXCEPTION-2": PolicyClause(
         clause_id="DELIVERY-EXCEPTION-2",
         title="Conflicting delivery evidence",

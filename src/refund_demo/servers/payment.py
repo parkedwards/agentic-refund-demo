@@ -16,8 +16,8 @@ from refund_demo.scenarios import POLICY_VERSION, evidence, scenario_for
 mcp = FastMCP(
     "Payment Sandbox",
     instructions=(
-        "This server simulates an irreversible payment system. Do not attach it "
-        "to an agent node. Call issue_refund only from the deterministic refund flow."
+        "This server simulates an irreversible payment system. Attach it only to "
+        "the terminal payment action node after policy or manager authorization."
     ),
 )
 
@@ -69,13 +69,14 @@ def get_authoritative_payment(
 @mcp.tool
 def issue_refund(
     refund_request: RefundRequest,
-    idempotency_key: str,
+    idempotency_key: str | None = None,
 ) -> RefundReceipt:
     """Issue one simulated refund after strict source and policy validation."""
     scenario = scenario_for(refund_request.case_id)
     expected_key = f"refund:{scenario.case_id}:{scenario.payment_id}"
-    if idempotency_key != expected_key:
+    if idempotency_key is not None and idempotency_key != expected_key:
         raise ValueError("invalid_idempotency_key")
+    idempotency_key = expected_key
 
     _validate_refund_request(refund_request)
     request_hash = sha256(refund_request.model_dump_json().encode()).hexdigest()

@@ -33,8 +33,7 @@ async def test_issue_refund_is_idempotent() -> None:
     arguments = {
         "refund_request": refund_request_for(
             scenario.case_id, approval_mode="policy"
-        ),
-        "idempotency_key": f"refund:{scenario.case_id}:{scenario.payment_id}",
+        )
     }
 
     async with Client(payment_mcp) as client:
@@ -52,6 +51,26 @@ async def test_issue_refund_is_idempotent() -> None:
     )
     assert ledger.structured_content["receipt_count"] == 1
     assert ledger.structured_content["receipts"][0]["effect_count"] == 1
+
+
+@pytest.mark.asyncio
+async def test_manager_exception_refund_succeeds() -> None:
+    scenario = scenario_for("CASE-2083")
+    arguments = {
+        "refund_request": refund_request_for(
+            scenario.case_id, approval_mode="manager"
+        )
+    }
+
+    async with Client(payment_mcp) as client:
+        receipt = await client.call_tool("issue_refund", arguments)
+        ledger = await client.call_tool(
+            "list_refunds", {"case_id": scenario.case_id}
+        )
+
+    assert receipt.structured_content["status"] == "succeeded"
+    assert receipt.structured_content["amount_minor"] == scenario.amount_minor
+    assert ledger.structured_content["receipt_count"] == 1
 
 
 @pytest.mark.asyncio

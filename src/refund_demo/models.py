@@ -119,6 +119,16 @@ class RiskSignals(DemoModel):
     evidence: list[Evidence]
 
 
+class RemedyOptions(DemoModel):
+    case_id: str
+    order_id: str
+    claim_type: Literal["item_issue", "delivery_issue", "preference_issue"]
+    preferred_remedy: Literal["refund", "replacement", "store_credit"]
+    replacement_available: bool
+    carrier_review_required: bool
+    evidence: list[Evidence]
+
+
 class PolicyClause(DemoModel):
     clause_id: str
     title: str
@@ -167,3 +177,34 @@ class RefundReceipt(DemoModel):
 class RefundLedger(DemoModel):
     receipt_count: int = Field(ge=0)
     receipts: list[RefundReceipt]
+
+
+class RemedyRequest(DemoModel):
+    case_id: str
+    customer_id: str
+    order_id: str
+    action: Literal["replacement", "store_credit", "carrier_review"]
+    amount_minor: int = Field(ge=0)
+    currency: str
+    policy_version: str
+    policy_clause_ids: list[str] = Field(min_length=1)
+    reason_code: str
+
+
+class RemedyReceipt(DemoModel):
+    action_id: str
+    idempotency_key: str
+    case_id: str
+    order_id: str
+    action: Literal["replacement", "store_credit", "carrier_review"]
+    amount_minor: int = Field(ge=0)
+    currency: str
+    status: Literal["succeeded"]
+    effect_count: Literal[1] = 1
+    idempotent_replay: bool
+    created_at: str
+
+
+class RemedyLedger(DemoModel):
+    receipt_count: int = Field(ge=0)
+    receipts: list[RemedyReceipt]

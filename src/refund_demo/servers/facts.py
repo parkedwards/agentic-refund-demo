@@ -5,6 +5,7 @@ from refund_demo.models import (
     OrderFacts,
     PaymentFacts,
     RefundHistory,
+    RemedyOptions,
     RiskSignals,
 )
 from refund_demo.scenarios import evidence, scenario_for
@@ -134,6 +135,51 @@ def get_refund_history(case_id: str, customer_id: str) -> RefundHistory:
                 "customer_analytics",
                 "chargebacks_12m",
                 scenario.chargebacks_12m,
+            ),
+        ],
+    )
+
+
+@mcp.tool
+def get_remedy_options(case_id: str, order_id: str) -> RemedyOptions | LookupFailure:
+    """Read the available remedy and operations options for one order."""
+    scenario = scenario_for(case_id)
+    if order_id != scenario.order_id:
+        return LookupFailure(
+            entity="order", requested_id=order_id, reason="order_not_found_for_case"
+        )
+
+    return RemedyOptions(
+        case_id=scenario.case_id,
+        order_id=scenario.order_id,
+        claim_type=scenario.claim_type,
+        preferred_remedy=scenario.preferred_remedy,
+        replacement_available=scenario.replacement_available,
+        carrier_review_required=scenario.carrier_review_required,
+        evidence=[
+            evidence(
+                f"{scenario.case_id}:remedy:claim_type",
+                "commerce_operations",
+                "claim_type",
+                scenario.claim_type,
+            ),
+            evidence(
+                f"{scenario.case_id}:remedy:preference",
+                "commerce_operations",
+                "preferred_remedy",
+                scenario.preferred_remedy,
+            ),
+            evidence(
+                f"{scenario.case_id}:remedy:replacement_available",
+                "inventory_system",
+                "replacement_available",
+                scenario.replacement_available,
+            ),
+            evidence(
+                f"{scenario.case_id}:remedy:carrier_review_required",
+                "carrier_system",
+                "carrier_review_required",
+                scenario.carrier_review_required,
             ),
         ],
     )
