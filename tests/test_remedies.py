@@ -13,7 +13,7 @@ def remedy_request_for(case_id: str, action: str, clause_id: str) -> dict[str, o
         "customer_id": scenario.customer_id,
         "order_id": scenario.order_id,
         "action": action,
-        "amount_minor": 0 if action == "carrier_review" else scenario.amount_minor,
+        "amount_minor": scenario.amount_minor if action == "store_credit" else 0,
         "currency": scenario.currency,
         "policy_version": POLICY_VERSION,
         "policy_clause_ids": [clause_id],

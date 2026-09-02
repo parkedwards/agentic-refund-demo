@@ -3914,7 +3914,7 @@
     "item_remedy": {
       "kind": "AgentNode",
       "label": "Choose item remedy",
-      "objective": "Call get_active_refund_policy with region from purchase.region, currency from payment_facts.currency, product_type and purchase_channel from order_facts, and as_of from purchase.case_opened_at. Copy these values exactly and use the complete clauses in the returned policy. Handle only an item_issue. Select original_refund when the customer requests a refund and the STANDARD-30 and AUTO-100 rules apply. Select replacement when the customer requests a replacement, inventory is available, and REPLACEMENT-DAMAGE-1 applies. Require low risk, a settled payment, no active dispute, and consistent identifiers. Copy all request values from the context, set the exact policy clause IDs, and never call a write tool.",
+      "objective": "Call get_active_refund_policy with region from purchase.region, currency from payment_facts.currency, product_type and purchase_channel from order_facts, and as_of from purchase.case_opened_at. Copy these values exactly and use the complete clauses in the returned policy. Handle only an item_issue. Select original_refund when the customer requests a refund and the STANDARD-30 and AUTO-100 rules apply. Select replacement when the customer requests a replacement, inventory is available, and REPLACEMENT-DAMAGE-1 applies. Set amount_minor to 0 for a replacement because this action does not move money. Require low risk, a settled payment, no active dispute, and consistent identifiers. Copy all other request values from the context, set the exact policy clause IDs, and never call a write tool.",
       "inputs": {
         "claim": {
           "schema": {

@@ -140,8 +140,8 @@ def _validate_request(request: RemedyRequest, *, expected_action: RemedyAction) 
             raise ValueError("replacement_not_requested")
         if not scenario.replacement_available:
             raise ValueError("replacement_unavailable")
-        if request.amount_minor != scenario.amount_minor:
-            raise ValueError("replacement_amount_mismatch")
+        if request.amount_minor != 0:
+            raise ValueError("replacement_amount_must_be_zero")
         if "REPLACEMENT-DAMAGE-1" not in clauses:
             raise ValueError("replacement_policy_clause_missing")
         return
