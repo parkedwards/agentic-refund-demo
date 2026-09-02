@@ -30,8 +30,8 @@ async def issue_refund(
                 "payment_id": refund_request.payment_id,
             },
         )
-        payment = payment_result.structured_content
-        if not isinstance(payment, dict) or payment.get("found") is not True:
+        payment = _tool_payload(payment_result.structured_content)
+        if payment.get("found") is not True:
             raise ValueError("The authoritative payment does not exist.")
         _validate_payment_boundary(refund_request, payment)
 
@@ -43,8 +43,8 @@ async def issue_refund(
             },
         )
 
-    receipt = refund_result.structured_content
-    if not isinstance(receipt, dict) or receipt.get("status") != "succeeded":
+    receipt = _tool_payload(refund_result.structured_content)
+    if receipt.get("status") != "succeeded":
         raise ValueError("The payment sandbox did not return a refund receipt.")
 
     logger.info(
@@ -58,6 +58,15 @@ async def issue_refund(
         markdown=_receipt_markdown(receipt, refund_request, decision_evidence),
     )
     return receipt
+
+
+def _tool_payload(content: dict[str, Any] | None) -> dict[str, Any]:
+    if not isinstance(content, dict):
+        raise ValueError("The MCP tool did not return structured content.")
+    payload = content.get("result", content)
+    if not isinstance(payload, dict):
+        raise ValueError("The MCP tool did not return an object.")
+    return payload
 
 
 def _validate_payment_boundary(

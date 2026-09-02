@@ -26,6 +26,7 @@ flow = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "prefect" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "ruff" },
@@ -42,6 +43,7 @@ provides-extras = ["flow"]
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "prefect", specifier = ">=3.4.0" },
     { name = "pytest", specifier = ">=8.4" },
     { name = "pytest-asyncio", specifier = ">=1.1" },
     { name = "ruff", specifier = ">=0.12" },

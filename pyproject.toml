@@ -17,6 +17,7 @@ flow = [
 
 [dependency-groups]
 dev = [
+    "prefect>=3.4.0",
     "pytest>=8.4",
     "pytest-asyncio>=1.1",
     "ruff>=0.12",
@@ -31,6 +32,7 @@ packages = ["src/refund_demo"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+pythonpath = ["."]
 testpaths = ["tests"]
 
 [tool.ruff]
