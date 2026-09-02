@@ -1,0 +1,41 @@
+[project]
+name = "agentic-refund-demo"
+version = "0.1.0"
+description = "Synthetic MCP systems for a Prefect agentic refund workflow demo"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastmcp==3.4.6",
+    "pydantic>=2.11",
+    "starlette>=1.3.1",
+]
+
+[project.optional-dependencies]
+flow = [
+    "prefect>=3.4.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4",
+    "pytest-asyncio>=1.1",
+    "ruff>=0.12",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/refund_demo"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
